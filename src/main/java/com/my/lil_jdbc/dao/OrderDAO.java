@@ -1,5 +1,7 @@
-package com.my.lil_jdbc;
+package com.my.lil_jdbc.dao;
 
+import com.my.lil_jdbc.model.Order;
+import com.my.lil_jdbc.model.OrderLine;
 import com.my.lil_jdbc.util.DataAccessObject;
 
 import java.sql.Connection;
@@ -34,6 +36,8 @@ public class OrderDAO extends DataAccessObject<Order> {
                     "JOIN order_item ol ON ol.order_id = o.order_id " +
                     "JOIN product p ON ol.product_id = p.product_id " +
                     "WHERE o.order_id = ?";
+
+    private static final String GET_FOR_CUST = "SELECT * FROM get_orders_by_customer(?)";
 
     public OrderDAO(Connection connection) {
         super(connection);
@@ -122,16 +126,16 @@ public class OrderDAO extends DataAccessObject<Order> {
         return super.getLastVal(sequence);
     }
 
-    public List<Order> getOrdersForCustomer(long customerId){
+    public List<Order> getOrdersForCustomer(long customerId) {
         List<Order> orders = new ArrayList<>();
-        try(PreparedStatement statement = this.connection.prepareStatement(GET_FOR_CUST);){
+        try (PreparedStatement statement = this.connection.prepareStatement(GET_FOR_CUST);) {
             statement.setLong(1, customerId);
             ResultSet resultSet = statement.executeQuery();
             long orderId = 0;
             Order order = null;
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 long localOrderId = resultSet.getLong(4);
-                if(orderId!=localOrderId){
+                if (orderId != localOrderId) {
                     order = new Order();
                     orders.add(order);
                     order.setId(localOrderId);
@@ -157,7 +161,7 @@ public class OrderDAO extends DataAccessObject<Order> {
                 orderLine.setProductPrice(resultSet.getBigDecimal(16));
                 order.getOrderLines().add(orderLine);
             }
-        }catch(SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }

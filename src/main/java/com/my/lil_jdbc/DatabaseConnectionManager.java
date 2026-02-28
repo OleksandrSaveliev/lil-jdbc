@@ -1,4 +1,4 @@
-package com.my;
+package com.my.lil_jdbc;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

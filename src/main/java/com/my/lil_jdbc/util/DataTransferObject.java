@@ -1,4 +1,5 @@
 package com.my.lil_jdbc.util;
 
-public class DataTransferObject {
+public interface DataTransferObject {
+    long getId();
 }

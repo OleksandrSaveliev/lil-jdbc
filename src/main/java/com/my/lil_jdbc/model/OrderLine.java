@@ -1,4 +1,4 @@
-package com.my.lil_jdbc;
+package com.my.lil_jdbc.model;
 
 import java.math.BigDecimal;
 
